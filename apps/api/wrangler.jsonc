@@ -1,0 +1,36 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "portfolio-api",
+  "main": "../../dist/api/index.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+
+  "vars": {
+    "APP_NAME": "Portfolio Holding",
+    "MOCK_CONNECTORS": "false",
+    "NOTIFICATION_CHANNEL": "log",
+    "CRON_ENABLED": "true"
+  },
+
+  "d1_databases": [{ "binding": "DB", "database_name": "portfolio", "database_id": "<id-d1-anda>" }],
+  // arsip/ekspor audit (§5.4); `ASSETS` di bawah adalah static assets dashboard
+  "r2_buckets": [{ "binding": "AUDIT_BUCKET", "bucket_name": "portfolio-audit" }],
+
+  "queues": {
+    "producers": [{ "binding": "JOBS", "queue": "agent-jobs" }],
+    "consumers": [{ "queue": "agent-jobs", "max_retries": 3, "dead_letter_queue": "agent-jobs-dlq" }]
+  },
+
+  // Satu Durable Object per SaaS Unit (§3.2, §11.5); `dist/api/index.js` mengekspor kelas `SaasGuard`.
+  "durable_objects": { "bindings": [{ "name": "SAAS_GUARD", "class_name": "SaasGuard" }] },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["SaasGuard"] }],
+
+  // §11.4 menyebut binding ini, tetapi kelas workflow belum diimplementasikan.
+  // Binding yang menunjuk kelas tak ada membuat deploy gagal, jadi baris ini dinonaktifkan
+  // sampai alur Cloudflare Workflows dikerjakan (lihat CHECKLIST.md §13).
+  // "workflows": [{ "name": "daily-run", "binding": "DAILY_RUN", "class_name": "DailyRunWorkflow" }],
+  "triggers": { "crons": ["0 1 * * *"] },
+
+  "assets": { "directory": "../../apps/web/dist", "binding": "ASSETS", "not_found_handling": "single-page-application" }
+}

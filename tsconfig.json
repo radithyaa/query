@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["node"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@portfolio/shared": ["./packages/shared/src/index.ts"],
+      "@portfolio/shared/*": ["./packages/shared/src/*"],
+      "@portfolio/db": ["./packages/db/src/index.ts"],
+      "@portfolio/db/*": ["./packages/db/src/*"],
+      "@portfolio/agents": ["./packages/agents/src/index.ts"],
+      "@portfolio/agents/*": ["./packages/agents/src/*"],
+      "@portfolio/connectors": ["./packages/connectors/src/index.ts"],
+      "@portfolio/connectors/*": ["./packages/connectors/src/*"]
+    }
+  }
+}

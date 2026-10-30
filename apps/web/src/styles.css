@@ -1,0 +1,191 @@
+/* Design tokens dashboard (FR-7). Tailwind 4: konfigurasi di CSS, tanpa tailwind.config. */
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, monospace;
+
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-surface-2: var(--c-surface-2);
+  --color-line: var(--c-line);
+  --color-fg: var(--c-fg);
+  --color-muted: var(--c-muted);
+  --color-accent: var(--c-accent);
+  --color-accent-fg: var(--c-accent-fg);
+  --color-ok: var(--c-ok);
+  --color-ok-soft: var(--c-ok-soft);
+  --color-warn: var(--c-warn);
+  --color-warn-soft: var(--c-warn-soft);
+  --color-bad: var(--c-bad);
+  --color-bad-soft: var(--c-bad-soft);
+  --color-info: var(--c-info);
+  --color-info-soft: var(--c-info-soft);
+
+  --radius-card: 0.75rem;
+}
+
+/* Nilai tema; default mengikuti sistem operasi, `data-theme` (disetel ThemeScript) menang. */
+:root {
+  --c-bg: #f7f7f8;
+  --c-surface: #ffffff;
+  --c-surface-2: #f1f2f4;
+  --c-line: #e3e5e9;
+  --c-fg: #14161b;
+  --c-muted: #656d7b;
+  --c-accent: #2f56d8;
+  --c-accent-fg: #ffffff;
+  --c-ok: #0b7350;
+  --c-ok-soft: #e3f4ec;
+  --c-warn: #8a5a00;
+  --c-warn-soft: #fcf0d4;
+  --c-bad: #a8241c;
+  --c-bad-soft: #fbe6e4;
+  --c-info: #1f5f8b;
+  --c-info-soft: #e2eff8;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --c-bg: #0e1014;
+    --c-surface: #15181e;
+    --c-surface-2: #1c2029;
+    --c-line: #272c36;
+    --c-fg: #e7e9ee;
+    --c-muted: #98a1b0;
+    --c-accent: #7d9bff;
+    --c-accent-fg: #0e1014;
+    --c-ok: #4bc79a;
+    --c-ok-soft: #10322a;
+    --c-warn: #e0ab4a;
+    --c-warn-soft: #35280f;
+    --c-bad: #f0827a;
+    --c-bad-soft: #3a1a18;
+    --c-info: #74b6e0;
+    --c-info-soft: #122a3a;
+    color-scheme: dark;
+  }
+}
+
+[data-theme="dark"] {
+  --c-bg: #0e1014;
+  --c-surface: #15181e;
+  --c-surface-2: #1c2029;
+  --c-line: #272c36;
+  --c-fg: #e7e9ee;
+  --c-muted: #98a1b0;
+  --c-accent: #7d9bff;
+  --c-accent-fg: #0e1014;
+  --c-ok: #4bc79a;
+  --c-ok-soft: #10322a;
+  --c-warn: #e0ab4a;
+  --c-warn-soft: #35280f;
+  --c-bad: #f0827a;
+  --c-bad-soft: #3a1a18;
+  --c-info: #74b6e0;
+  --c-info-soft: #122a3a;
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    background: var(--c-bg);
+    color: var(--c-fg);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--c-accent);
+    outline-offset: 2px;
+  }
+
+  /* Angka tabular untuk kolom metrik agar mudah dibandingkan. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Kelas dasar input di layer `components` agar utilitas (h-8, w-auto) selalu menang. */
+@layer components {
+  .input-dasar {
+    width: 100%;
+    height: 2.25rem;
+    border-radius: 0.375rem;
+    border: 1px solid var(--c-line);
+    background: var(--c-surface);
+    padding-inline: 0.625rem;
+    font-size: 0.875rem;
+    color: var(--c-fg);
+  }
+
+  .input-dasar::placeholder {
+    color: color-mix(in srgb, var(--c-muted) 80%, transparent);
+  }
+
+  .input-dasar:focus {
+    border-color: var(--c-accent);
+    outline: none;
+  }
+
+  .input-dasar:disabled {
+    opacity: 0.6;
+  }
+
+  .dialog-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 45%);
+    backdrop-filter: blur(2px);
+    z-index: 50;
+  }
+
+  .dialog-content {
+    position: fixed;
+    z-index: 51;
+    inset-inline: 0;
+    top: 50%;
+    margin-inline: auto;
+    width: calc(100% - 2rem);
+    max-width: 46rem;
+    max-height: calc(100dvh - 3rem);
+    overflow: auto;
+    transform: translateY(-50%);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .dialog-overlay[data-state="open"] {
+      animation: fade-in 120ms ease-out;
+    }
+    .dialog-content[data-state="open"] {
+      animation: rise-in 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(calc(-50% + 8px)); }
+  to { opacity: 1; transform: translateY(-50%); }
+}
+
+/* Cetak halaman portofolio/audit sebagai lampiran (mis. laporan bulanan). */
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff; color: #000; }
+}

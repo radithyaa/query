@@ -1,0 +1,20 @@
+# dependensi dan hasil build
+node_modules/
+dist/
+apps/web/dist/
+
+# database lokal
+.data/
+*.db
+*.db-shm
+*.db-wal
+
+# lingkungan
+.env
+.env.*
+!.env.example
+
+# editor / OS
+.DS_Store
+*.log
+coverage/

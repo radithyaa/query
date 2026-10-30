@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "portfolio-api-staging",
+  "main": "../../dist/api/index.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  "vars": {
+    "APP_NAME": "Portfolio Holding (staging)",
+    "MOCK_CONNECTORS": "true",
+    "NOTIFICATION_CHANNEL": "log",
+    "CRON_ENABLED": "false"
+  },
+
+  "d1_databases": [{ "binding": "DB", "database_name": "portfolio-staging", "database_id": "<id-d1-staging>" }],
+  "r2_buckets": [{ "binding": "AUDIT_BUCKET", "bucket_name": "portfolio-audit-staging" }],
+  "durable_objects": { "bindings": [{ "name": "SAAS_GUARD", "class_name": "SaasGuard" }] },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["SaasGuard"] }],
+  "triggers": { "crons": [] },
+  "assets": { "directory": "../../apps/web/dist", "binding": "ASSETS", "not_found_handling": "single-page-application" }
+}
